@@ -1,0 +1,22 @@
+{
+  "name": "Нотификатор сайта FreelanceHunt.com",
+  "description": "Отображает информацию о новых проектах и заданиях.",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+	"storage"
+  ],
+  "background": {
+    "page": "bg.html"
+  },
+   "icons": {
+      "16": "images/icon.png",
+      "48": "images/icon_48.png"
+   },
+  "browser_action": {
+      "default_title": "Нотификатор сайта FreelanceHunt.com",
+      "default_icon":  "images/icon.png",
+      "default_popup": "popup.html"
+  },
+  "manifest_version": 2
+}

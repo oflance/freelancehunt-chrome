@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title>Freelancehunt.com Notifier by Vaskevych</title>
+	
+	<link href="styles/style.css" rel="stylesheet" type="text/css">
+	
+	<script src="js/jquery-2.1.0.min.js"></script>
+	<script src="js/popup.js"></script>
+	<script src="js/j.timeago.js"></script>
+</head>
+<body>
+
+<div id="settings">
+    <h1>
+      <img src="images/icon_48.png" style="float: left; padding-right: 5px;"/>
+      <div id="title">Нотификатор Freelancehunt.com</div>
+	  <div id="title"><small>Автор: Васкевич Максим</small></div>
+    </h1>
+    <h2>Настройки</h2>
+	<form>
+		<table>
+			<tr><td width="120px"><b>Идентификатор:</b></td><td><input type="text" id="fr_id"></input></td></tr>
+			<tr><td width="120px"><b>Секретный ключ:</b></td><td><input type="text" id="fr_key"></input></td></tr>
+			
+			<tr><td width="120px"><b>Получить ключи:</b></td><td>
+			<p><a href="http://freelancehunt.com/my/api"><b>Згенерировать ключи на сайте.</b></a></p>
+			</td></tr>
+		</table>
+	</form>
+</div>
+
+<div id="about">
+    <h1>
+      <img src="images/about.png" style="float: left; padding-right: 5px;"/>
+      <div id="title">Нотификатор Freelancehunt.com</div>
+	  <div id="title"><small>Автор: Васкевич Максим</small></div>
+    </h1>
+    <p><i>Написан на чистом энтузиазме для собственного использования.</i><br><br>
+	<b>Donate:</b><br>
+    Но если кому то понравился можете отблагодорить (WebMoney):<br>
+	<b>Z303192222179</b><br>
+	<b>U337429717656</b><br>
+	<b>R311995955905</b><br><br>
+	Предложения и замечания отправляйте в сообщения на <a href="http://freelancehunt.com/freelancer/Vaskevych.html"><b>freelancehunt.com</b></a></p>
+	<p><i>Все права на иконки и загружаемый контент пренадлежат исключительно <b>freelancehunt.com</b></i></p>
+</div>
+
+<div id="loading"><img src="images/loading.gif" /></div>
+
+<div id="prj"></div>
+<div id="projects"></div>
+
+<div id="toolbar">
+	<table id="coolbar" border="0">
+		<tr><td>
+			<span id="btn_back">Вернутся назад</span>
+			<span id="btn_update">Обновить</span>
+			<span id="btn_save">Сохранить настройки</span>
+			<span id="btn_settings">Настройки</span>
+			<span id="btn_about">Об авторе</span>
+			<span id="btn_close">Закрыть окно</span>				
+		</td></tr>
+	</table>
+</div>
+
+</body>
+</html>
