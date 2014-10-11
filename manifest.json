@@ -1,6 +1,8 @@
 {
-  "name": "Нотификатор сайта FreelanceHunt.com",
+  "name": "FreelanceHunt.com - monitor",
+  "short_name": "FreelanceHunt Extension",
   "description": "Отображает информацию о новых проектах и заданиях.",
+  "author": "Max Vaskevych",
   "version": "1.0",
   "permissions": [
     "tabs",
