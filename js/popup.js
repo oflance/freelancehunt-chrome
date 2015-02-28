@@ -1,58 +1,142 @@
 /*
-	FH_COM_JS v1.0.0
-	(c) 2014 by Vaskevych. All rights reserved.
+	FH_COM_JS v3.0
+	(c) 2014-2015 by Vaskevych. All rights reserved.
 	http://freelancehunt.com/freelancer/Vaskevych.html
 */
 
 $(document).ready(function() {
 
-var HtmlMode = 0;
+// ======================== NAVIGATION ====================================
 
-function UpdateLinks() {
-	$('a').click(
-	   function() {
-			fhurl = $(this).attr('href');
-			if (fhurl.charAt(0) == '/') {
-				fhurl = 'https://freelancehunt.com' + fhurl;
-			}
-			chrome.tabs.create({url: fhurl});
-			return false;
-	   }
-	);
+var WorkMode = '';
+var Th_Url = "https://api.freelancehunt.com/threads/";
+
+function SetAllReaded() {
 	
-	$('#feed #uad').click(function() {
-		ShowUserInfo($(this).attr('for'));
+	itsDB = new RegExp("^" + "DB:");
+
+	for (i = localStorage.length; i >= 0; i--) {
+		base = localStorage.key(i);
+		
+		if (itsDB.test(base)) {
+			var Data = JSON.parse(localStorage[base]);
+			Data.readed = true;
+			localStorage[base] = JSON.stringify(Data);
+		}	
+    }
+	$.UpdateCount();
+}
+
+function HideAllDiv(){
+	$('#container .idiv').each(function (i, ob) {
+		$(ob).css('display', 'none');
 	});
 	
-	$('#projects #logo').click(function() {
-		ShowUserInfo($(this).attr('for'));
+	$('#menu li').each(function (i, ob) { $(ob).removeClass('selected'); });
+}
+
+function ShowStats(){
+	
+	if (localStorage.getItem("RATINGS") != null) {
+		
+		$("#graph > tbody").html("");
+		$("#graph > thead").html("");
+		$(".visualize-bar").remove();
+		
+		var tbody = $('#graph tbody');
+		var thead = $('#graph thead');
+		
+		var tr = $('<tr>'); var th = $('<tr>');
+		
+		$.each(JSON.parse(localStorage["RATINGS"]), function(i, reservation) {
+		  
+		  var date = new Date(reservation['date'])
+		  
+		  $('<th>'+ date.getDate() +'-'+ (date.getMonth() + 1) +'-'+ date.getFullYear() +'</th>').appendTo(th);
+		  $('<td>'+ reservation['rating'] +'</td>').appendTo(tr);
+		  
+		});
+
+		thead.append(th); tbody.append(tr);		
+	
+		$('#graph').visualize({type: 'bar'});
+	}
+}
+
+$('#filter,#flicks').unbind().click(function() {
+	HideAllDiv();
+	LoadSkills();
+	
+	$($(this).attr('for')).css('display', 'block').animate({"scrollTop":0},"fast");
+	if ($(this).attr('for') == '#id_fk') { ShowStats(); }
+});
+
+if (localStorage.getItem('ME_OFF') == null) { $('#me_off').removeClass('off'); } else { $('#me_off').addClass('off');}
+
+$('#me_off').unbind().click(function() {
+	
+	if (localStorage.getItem('ME_OFF') == null) {
+		localStorage.setItem('ME_OFF', 'TRUE');
+		$(this).addClass('off');
+		$.UpdateCount();
+	} else { 
+		localStorage.removeItem('ME_OFF'); 
+		$(this).removeClass('off');
+		$.UpdateCount();
+	}
+	
+	$($(this).attr('for')).css('display', 'block').animate({"scrollTop":0},"fast");
+});
+
+$('#menu li').unbind().click(function() {
+
+	HideAllDiv();
+	
+	if ($(this).attr('for') == 'id_pj') { SetAllReaded(); }
+	
+	$(this).addClass('selected');	
+	$('[id="' + $(this).attr('for') + '"]').css('display', 'block').animate({"scrollTop":0},"fast");
+	
+});
+
+function LoadSkills(){
+	
+	$('#id_fl #data').html('');
+	var Data = JSON.parse(localStorage.getItem('SKL'));
+	
+	$.each(Data, function(key, value){
+		
+		var obj = JSON.parse(JSON.stringify(value));	
+		
+		if (localStorage.getItem('ME_SKL') == null) { checker = ""; } else {
+		if (localStorage.getItem('ME_SKL').indexOf(obj.skill_id + ",") >= 0) {checker = "checked";} else { checker = ""; }}
+		
+		$('<div id="blk"><input type="checkbox" class="chb" id="'+ obj.skill_id +'" name="'+ obj.skill_id +'" ' +checker +' />'+
+		'<label for="'+ obj.skill_id +'" class="clabel">'+ obj.skill_name +'</label></div>').appendTo('#id_fl #data');
+		
+	});
+	
+	$( "#id_fl #data .chb" ).unbind().change(function() {  
+		var skills = '';	  
+		$('#id_fl #data input:checked').each(function() {
+			skills += $(this).attr('name') + ',';
+		}); 
+		localStorage.setItem('ME_SKL', skills);
 	});
 }
 
-// ===================================================================================
+// ======================== END NAVIGATION ====================================
 
-	$("#refresh,#eloading").click(function() {
-		chrome.runtime.sendMessage({method:"Update"}, null);
-	});
-	
-	$("#saveitems").click(function() {
-		localStorage.setItem('FID', $('#FID').val());
-		localStorage.setItem('FKEY', $('#FKEY').val());
-		chrome.runtime.sendMessage({method:"Update"}, null);
-		ShowTabId(1);
-		Initialize();
-	});	
-	
-	$("#projects #desc").click(function() {
-		//JSProject($(this).attr('for'));
-	});
-	
-	$('#user_name').click(function() {
-		ShowUserInfo($(this).attr('for'));
-		$.UpdateCount();
-	});
-	
-// ===================================================================================
+$("#refresh,#eloading").unbind().click(function() {
+	chrome.runtime.sendMessage({method:"Update"}, null);
+});
+
+$("#saveitems").unbind().click(function() {
+	localStorage.setItem('FID', $('#FID').val());
+	localStorage.setItem('FKEY', $('#FKEY').val());
+	chrome.runtime.sendMessage({method:"Update"}, null);
+	Initialize();
+});	
 
 function CheckSettings() {
 	var result = true;
@@ -64,69 +148,98 @@ function CheckSettings() {
 	return result;
 }
 
-// ===================================================================================
+// ========================================== INITIALIZE ==================
 
-$('#menu li').click(function() {
-
-	$('#d6').hide();
-
-	$('#menu li').each(function (i, ob) {
-		$(ob).removeClass('selected');
-		$('[id="' + $(ob).attr('for') + '"]').css('display', 'none');
-	});
+function UpdateLinks() {
 	
-	$(this).addClass('selected');
-		$('[id="' + $(this).attr('for') + '"]').css('display', 'block');	
-		
-	$.UpdateCount();
+	$('a').unbind().click(
+	   function() {
+			fhurl = $(this).attr('href');
+			if (fhurl.charAt(0) == '/') {
+				fhurl = 'https://freelancehunt.com' + fhurl;
+			}
+			chrome.tabs.create({url: fhurl});
+			return false;
+	   }
+	);
+	
+	$('#id_fd #uad, #id_pj #logo, #u_name').unbind().click(function() {
+		ShowUserInfo($(this).attr('for'));
+	});
+
+}
+
+function ShowUserInfo(Url){
+	WorkMode = 'US';
+	$.GetData(Url, 'TMP');
+}
+
+function ShowThreadInfo(Url){
+	WorkMode = 'MS';
+	$.GetData(Url, 'TMP');
+}
+
+function blink(elem, times, speed) {
+    if (times > 0 || times < 0) {
+        if ($(elem).hasClass("blink")) {
+            $(elem).removeClass("blink");
+			$(elem).focus(); }
+        else
+            $(elem).addClass("blink");
+    }
+
+    clearTimeout(function () {
+        blink(elem, times, speed);
+    });
+
+    if (times > 0 || times < 0) {
+        setTimeout(function () {
+            blink(elem, times, speed);
+        }, speed);
+        times -= .5;
+    }
+}
+
+function SendNewMessage(){
+	if ($.trim($('#msg_text').val()) == ""){
+		blink('#msg_text', 2, 200);
+	} else {
+		$.SendData(Th_Url+$('#thread_id').val(), $('#msg_text').val());
+		$('#msg_text').val('');	
+	}
+}
+
+$('#msg_send').unbind().click(function() {
+	SendNewMessage();
 });
-	
-	
-// ===================================================================================
-	
-function ShowTabId(id){
 
-	$('#d6').hide();
-	
-	$('#menu li').each(function (i, ob) {
-		$(ob).removeClass('selected');
-		$('[id="' + $(ob).attr('for') + '"]').css('display', 'none');
-		
-		if ((i+1) == id) {
-			$(this).addClass('selected');
-			$('[id="d' + id + '"]').css('display', 'block');	
-		}
-	});
-}
+$('#msg_text').unbind().keydown(function (e) {
 
-function NormalizeText(lines) 
-	{
-	return lines.replace(/\n/g,"<br/>")
-				.replace(/\ \ /g," &nbsp;")
-				.replace(/"/g,"&quot;")
-				.replace(/\$/g,"&#36;");
-}
+  if (e.ctrlKey && e.keyCode == 13) {
+    SendNewMessage();
+  }
   
-// ===================================================================================
-
+});
+		
 function ShowCustomHtml() {
-
+	
 	var profile_id = 0;
 	if (localStorage.getItem("PROFILE") != null) {
 		var Data = JSON.parse(localStorage.getItem('PROFILE'));
 		profile_id = Data.profile_id;	  
 	}
+		
+	if (WorkMode == 'US') {
 	
-	// ==========================================================================
+	HideAllDiv();
+	$('#id_us').css('display', 'block');
 	
-	if (HtmlMode == 'user') {
 	var Data = JSON.parse(localStorage.getItem('TMP'));
 	
 	var online = '<abbr class="timeago" title="'+ Data.last_activity +'"></abbr>';
 	if (Data.is_online ==  true) { var online = 'сейчас на сайте'; }
 	
-	$('#custom').css('padding', '10px');
-	$('#custom').html('<table border="0" id="user_data">'+
+	$('#id_us #data').css('padding-left', '10px').html('<table border="0" id="user_data">'+
 					'<tr><td colspan="2"><a href="'+ Data.url +'"><b style="font-size: 16px;">'+Data.fname +' '+ Data.sname + ' ('+ Data.login +')</b></a>'+
 					'<span id="flicks2" class="icon-signal" style="float: right">'+ Data.rating +'</span>'+'<br><br></td><tr>'+
 					'<tr valign="top"><td width="210px"><img src="'+ Data.avatar.replace('/avatar/50/', '/avatar/225/') +'" class="img-thm" /></td><td>'+ 
@@ -142,81 +255,86 @@ function ShowCustomHtml() {
 					'<iframe id="iframe1"></iframe>'+
 					'</td><tr></table>');
 					
+		$('.img-thm').error(function() {
+			var ImSrc = $(this).attr('src');
+			$(this).attr('src', ImSrc.replace('/avatar/225/', '/avatar/50/'));
+		});
+					
 		$('#iframe1').contents().find('html').html(				
 		'<style>#uatext { margin: 0px; margin-top: 6px; margin-bottom: 6px; width: 520px; height: 130px; border-radius: 4px; } '+
 		'.button{ background: #70baeb; 	border-radius: 4px; font-family: Arial; font-weight: bold; border: 0; padding: 5px; color: White;}'+
 		'</style><form action="'+ Data.url_private_message +'" method="post" id="addprivatemessage" enctype="multipart/form-data">'+
     	'<input type="hidden" id="qf:addprivatemessage" name="_qf__addprivatemessage" />'+
-		'<textarea id="uatext" name="message"></textarea><input class="button" type="submit" id="sendmessage" value="&nbsp;&nbsp;Отправить&nbsp;&nbsp;"></input></form>');				
+		'<textarea id="uatext" name="message"></textarea><input class="button" type="submit" id="sendmessage" value="&nbsp;&nbsp;Отправить&nbsp;&nbsp;"></input></form>');	
+
+		WorkMode = '';
 	}
 	
-	// =====================================
-	if (HtmlMode == 'message') {
-	var Data = JSON.parse(localStorage.getItem('TMP'));
-	$('#custom').html('');
-	
-	$.each(Data, function(key, value){
+	if (WorkMode == 'MS') {
 		
-		var obj = JSON.parse(JSON.stringify(value));
-		if (obj.from.profile_id == profile_id) { rpos = 'right'; lpos = 'left'; } else { rpos = 'left'; lpos = 'right'; }
+	HideAllDiv();
+	$('#id_ms_thr').css('display', 'block');
 	
-		$('<div id="msg"><div id="msglogo" style="float: '+rpos+'"><img src="'+obj.from.avatar+'" /></div><div id="msgbody">'+obj.message_html+'</div></div>').appendTo('#custom');
-	
-	
-	
-	
-	
+		var Data = JSON.parse(localStorage.getItem('TMP'));
+		$('#id_ms_thr #data #msg_feed').html('');
+		
+		$.each(Data, function(key, value){
+			
+			var obj = JSON.parse(JSON.stringify(value));
+			if (obj.from.profile_id == profile_id) { rpos = 'right'; lpos = 'left'; } else { rpos = 'left'; lpos = 'right'; }
+		
+			$('<div id="msg"><div id="msglogo" style="float: '+rpos+'"><img src="'+obj.from.avatar+'" /></div><div id="msgbody" class="chat chat-'+
+			rpos+'">'+obj.message_html+'</div></div>').appendTo('#id_ms_thr #data #msg_feed');
+		
+			});
+			
+		$('#id_ms_thr #data #msg_feed img').each(function(){
+			var src = $(this).attr('src')
+			if (src.charAt(0) == '/') {
+				src = 'https:' + src;
+			}
+			$(this).attr('src', src);
 		});
-	}
 	
-	UpdateLinks();
-	jQuery("abbr.timeago").timeago();
+	$("#msg_feed").animate({ scrollTop: $('#msg_feed')[0].scrollHeight}, 500);
+	WorkMode = '';
+	}	
 }
-
-function ShowUserInfo(Url){
-	ShowTabId(6); 
-	$('#d6').show();
-	$('#custom').html('');
-	HtmlMode = 'user';
-	$.GetData(Url, 'TMP');	
-
-}
-
-function ShowThreadInfo(Url){
-	ShowTabId(6); 
-	$('#d6').show();
-	$('#custom').html('');
-	HtmlMode = 'message';
-	$.GetData(Url, 'TMP');	
-}
-
+	
 function UpdateUser(){
-
 	if (localStorage.getItem("PROFILE") != null) {
 		var Data = JSON.parse(localStorage.getItem('PROFILE'));
-		$('#user_name').html(Data.fname+' '+Data.sname);
+		$('#u_name').html(Data.fname+' '+Data.sname);
 		$('#flicks').html(Data.rating);	  
+				
+		if (localStorage.getItem("RATINGS") == null) {
+			var param = [];
+			param.push({"date":$.now(), "rating":Data.rating});		
+			localStorage["RATINGS"] = JSON.stringify(param);
+			
+		} else {
+			
+			var storedNames = [];
+			storedNames = JSON.parse(localStorage["RATINGS"]);				
+			if (storedNames[storedNames.length - 1]['rating'] != Data.rating) {
+				storedNames.push({"date":$.now(), "rating":Data.rating});		
+			}	
+			localStorage["RATINGS"] = JSON.stringify(storedNames);
+		} 	
 	}
 }
 
-function UpdateFeeD(){
-
-	if (localStorage.getItem("FEED") != null) {
-		var FeedData = JSON.parse(localStorage.getItem('FEED'));
-		
-		$.each(FeedData, function(key, value){
-			var obj = JSON.parse(JSON.stringify(value));
-			if (obj.is_new == true) {
-			$('<div id="feed_id" class="icon-info"><b><span id="uad" for="https://api.freelancehunt.com/profiles/'+ obj.from.login +'">'+ obj.from.login +'</span> '+obj.message+'</b></div>').appendTo('#feed');
-			} else {
-			$('<div id="feed_id" class="icon-info"><span id="uad" for="https://api.freelancehunt.com/profiles/'+ obj.from.login +'">'+ obj.from.login +'</span> '+obj.message+'</div>').appendTo('#feed'); }			
-		});
-	}
+function ShowMSCount(){
+	var count = $.MSCount();	
+	if (count == 0){ $('#umnew2').hide();
+	} else { $('#umnew2').html(count).show(); }	
 }
+
+// ===========================================================
 
 function UpdateNewMessages(){
 
-	$('#ms').html('');
+	$('#id_ms #data').html('');
 
 	if (localStorage.getItem("MS") != null) {
 		var FeedData = JSON.parse(localStorage.getItem('MS'));
@@ -226,69 +344,107 @@ function UpdateNewMessages(){
 			
 			if (obj.subject == '') obj.subject = 'Тема сообщения не указана.';
 			
-			$('<div id="thread" class="new_'+obj.is_unread+'" for="'+ obj.url_api+'">'+ // undef or yes
+			$('<div id="thread" class="new_'+obj.is_unread+'" for="'+ obj.url_api+'" value="'+ obj.thread_id +'">'+ // undef or yes
 			'<div id="logo">'+
 			'<img src="'+ obj.from.avatar +'" /></div>'+ 
-			'<div id="title">'+ obj.subject +'</div><span id="umnew">'+ obj.message_count +'</span>'+
-			'<div id="desc">'+ obj.from.fname +' '+ obj.from.sname +'</div>'+
+			'<div id="mstitle">'+ obj.subject +'</div><span id="umnew">'+ obj.message_count +'</span>'+
+			'<div id="msdesc">'+ obj.from.fname +' '+ obj.from.sname +'</div>'+
 			'<div id="info"><span><abbr class="timeago" title="'+ obj.last_post_time +'">...</abbr></span>'+
-			'</div></div>').appendTo("#ms");
+			'</div></div>').appendTo("#id_ms #data");
 			
 		});
 		
-	$('#ms #thread').click(function() {
+	$('#id_ms #thread').unbind().click(function() {
 		ShowThreadInfo($(this).attr('for'));
+		
+		$('#thread_id').val($(this).attr('value'));
 	});	
 			
 	}
 }
 
+// ===========================================================
 
-// ===================================================================================
+function UpdateFeeD(){
+
+	if (localStorage.getItem("FEED") != null) {
+		var FeedData = JSON.parse(localStorage.getItem('FEED'));
+		
+		$('#id_fd #data').html('');
+		
+		$.each(FeedData, function(key, value){
+			var obj = JSON.parse(JSON.stringify(value));
+				
+			$('<div id="feed_id" class="icon-info i'+ obj.is_new +'"><span id="uad" for="https://api.freelancehunt.com/profiles/'+ obj.from.login +'">'+ 
+			obj.from.login +'</span> '+obj.message+'</div>').appendTo('#id_fd #data');
+						
+		});
+		
+		$('#id_fd img').each(function(){
+			var src = $(this).attr('src')
+			if (src.charAt(0) == '/') {
+				if (src.indexOf("//") != -1) {
+				src = 'https:' + src;	
+				} else {
+				src = 'https://freelancehunt.com' + src; }
+			}
+			$(this).attr('src', src);
+		});
 	
+	}
+}
+
+// ===========================================================
+
 function Initialize() {
 
 	itsDB = new RegExp("^" + "DB:");
 
-	$('#feed').html('');
 	$('#loading').hide();
 	$('#eloading').hide();
-	$("#projects").html('');
+	$("#id_pj #data").html('');
 	
 	if (CheckSettings() == false) { 
 		localStorage.clear();
-		ShowTabId(4); 
+		HideAllDiv();
+		$("#id_st").css('display', 'block');
 	}
 	
 	UpdateUser();
 	UpdateFeeD();
 	UpdateNewMessages();
 	
-	for (i = localStorage.length; i > 0; i--) {
+	for (i = localStorage.length; i >= 0; i--) {
 		base = localStorage.key(i);
 		
 		// ==================================================
-
+		
 		if (itsDB.test(base)) {
 	
+			var budjet = '';
 			var Data = JSON.parse(localStorage[base]);
+			
+			if (Data.budget_amount !== undefined) {
+				budjet = Data.budget_amount +' '+Data.budget_currency_code;
+			}
+			
 			
 			$('<div id="project" class="'+Data.readed+'">'+ // undef or yes
 			'<div id="logo" for="'+ Data.from.url_api+'">'+
 			'<img src="'+ Data.from.avatar +'" /></div>'+ 
-			'<div id="title"><a href="'+ Data.url +'">'+ Data.name +'</a></div>'+
-			'<div id="desc" for="'+ Data.project_id +'">'+ Data.description +'</div>'+
-			'<div id="info">'+
+			'<div id="title"><a href="'+ Data.url +'">'+ Data.name +'</a><span class="uprice">'+ budjet +'</span></div>'+
+			'<div id="desc" for="'+ Data.project_id +'">'+ Data.description +'</div>'+'<div id="info">'+
 			'<span><abbr class="timeago" title="'+ Data.publication_time +'">...</abbr></span>'+
 			'<span>'+ Data.status_name +'</span>'+
-			'</div></div>').appendTo("#projects");
+			'<span>Ставок: '+ Data.bid_count +'</span>'+
+			'</div></div>').appendTo("#id_pj #data");
+	
 		}
-			
     }
-		
+	
+	ShowMSCount();
 	jQuery("abbr.timeago").timeago();
 	UpdateLinks();
-	
 }
 
 // ========================================== NOTIFIER ====================
@@ -298,6 +454,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		$('#loading').show();
     return true;
   }
+	if(message.method == "SLoading"){
+		$('#loading').hide();
+		$('#eloading').hide();
+	
+		WorkMode = '';
+		ShowThreadInfo(Th_Url+$('#thread_id').val());	
+		
+    return true;
+  }
+  
 	if(message.method == "ELoading"){
 		$('#loading').hide();
 		$('#eloading').hide();
@@ -314,11 +480,19 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   
 });
 
-// ============================== SETTINGS ======================
+// ========================================== SETTINGS ======================
 		
 	$("#FID").val(localStorage.getItem('FID'));
 	$("#FKEY").val(localStorage.getItem('FKEY'));
 	
+	
+	$("#FID, #FKEY").change(function() {
+		localStorage.setItem('FID', $('#FID').val());
+		localStorage.setItem('FKEY', $('#FKEY').val());			
+	});
+		
 	Initialize(); 
 		
+// ==========================================================================
+
 });

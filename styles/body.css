@@ -1,11 +1,14 @@
 @import url('fontello.css');
-@import url('http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|PT+Sans+Narrow:400,700|PT+Sans+Caption:400,700&amp;subset=latin,cyrillic');
 
+@font-face {
+    font-family: PTS;
+    src: url('font/PT_Sans.ttf');
+}
 body{
 	padding: 0;
 	margin: 0;
-	font-family: 'PT Sans', sans-serif;
-	font-size: 13px;
+	font-family: PTS, sans-serif;
+	font-size: 12px;
 	min-width: 600px;
 	min-height: 450px;
 }
@@ -19,6 +22,217 @@ a:hover{
 	text-decoration: underline;
 	color: #2173af;
 }
+
+#data{
+	width: 100%;
+	height: 450px;
+}
+
+#graph{
+	width: 490px;
+	height: 380px;
+	display: none;
+}
+
+.hide{
+	display: none;
+}
+
+#id_ms_thr, #id_pj{
+	position: relative;
+}
+
+/* =========================== NEW MSG =============================== */
+
+#msg_text{
+	width: 504px;
+	height: 40px;
+	border: 1px Solid Silver;
+	border-radius: 4px;
+}
+
+#msg_new{
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 550px;
+}
+
+#msg_send {
+	float: right;
+	width: 21px;
+	height: 33px;
+	font-size: 22px;
+	color: Gray;
+	cursor: pointer;
+	padding-top: 10px;
+	padding-right: 7px;
+	border: 1px Solid silver;
+	margin-right: 5px;
+	border-radius: 4px;
+	background: aliceblue;
+}
+
+#msg_feed{
+	max-height: 400px;
+	overflow-x: auto;
+}
+
+#id_fl, #id_fd, #id_pj, #id_ms{
+	max-height: 450px;
+	overflow-x: auto;
+}
+
+#id_st, #id_us, #id_ab, #id_fk{
+	max-height: 450px;
+}
+
+#project {
+	display: block;
+	width: 525px;
+	height: 75px;
+	margin-top: 0px;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	border: 1px Solid rgb(240, 236, 236);
+}
+
+#project:hover{
+	background: #F1F1F1;
+}
+
+#thread {
+	background: #F7F8FA;
+	display: block;
+	width: 525px;
+	height: 75px;
+	margin-top: 0px;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	border: 1px Solid rgb(240, 236, 236);
+}
+
+#thread:hover{
+	background: #F1F1F1;
+}
+
+#filter{
+	float: left;
+	text-decoration: none;
+	color: #2173af;
+	cursor: Pointer;
+	padding-left: 10px;
+}
+
+#refresh{
+	float: left;
+	text-decoration: none;
+	color: #2173af;
+	cursor: Pointer;
+	padding-left: 10px;
+}
+
+#me_off{
+	float: left;
+	text-decoration: none;
+	color: #2173af;
+	cursor: Pointer;
+	padding-left: 10px;
+}
+
+.off{
+	color: Red !important;
+}
+
+.idiv{
+	padding: 5px;
+}
+
+/* =========================== CheckBox =============================== */
+
+#blk{
+	display: block;
+	float: left;
+	width: 255px;
+}
+
+input[type=checkbox]{
+	border: 2px Solid Silver;
+	background: Gray;
+}
+
+input[type=checkbox]:checked + .clabel:before {  
+    content: "\2713";  
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);  
+    font-size: 15px;  
+    color: #f3f3f3;  
+    text-align: center;  
+    line-height: 15px;  
+} 
+
+input[type=checkbox] {  
+    display: none;  
+}
+
+.checkbox .clabel:before {  
+    border-radius: 3px;  
+} 
+
+.clabel {
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	padding-left: 22px;
+	margin-right: 15px;
+	font-size: 13px;
+	margin: 5px;
+	margin-left: 15px;
+	font-family: arial;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.clabel:before {
+	content: "";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
+	position: absolute;
+	left: 0;
+	bottom: 1px;
+	background-color: #768F9E;
+	border-radius: 4px;
+}
+
+/* =========================== CheckBox =============================== */
+
+#u_name{
+	color: rgb(52, 39, 39);
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#flicks, #flicks2 {
+	margin-right: 10px;
+	padding: 2px 5px;
+	color: #fff;
+	font-weight: 700;
+	text-shadow: 1px 1px #888;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #e47f18;
+	background-color: #ff8e1b;
+	cursor: Pointer;
+}
+
+
+
+
+
 
 #uad{
 	text-decoration: none;
@@ -35,10 +249,17 @@ a:hover{
 	width: 100%;
 }
 
-#refresh{
-	text-decoration: none;
-	color: #2173af;
-	cursor: Pointer;
+#umnew2{
+	background: 0 0/100% #2191ed;
+	position: absolute;
+	padding: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+	border-radius: 3px;
+	color: White;
+	font-weight: bold;
+	font-size: 9px;
+	left: 24px;
 }
 
 #umnew{
@@ -50,6 +271,10 @@ a:hover{
 	font-weight: bold;
 	font-size: 10px;
 	margin-right: 10px;
+}
+
+.itrue{
+	font-weight: bold;
 }
 
 #feed_id{
@@ -81,29 +306,6 @@ a:hover{
 	margin-right: 10px;
 }
 
-#refresh{
-	float: left;
-	padding-left: 10px;
-}
-
-#flicks, #flicks2 {
-	margin-right: 10px;
-	padding: 2px 5px;
-	color: #fff;
-	font-weight: 700;
-	text-shadow: 1px 1px #888;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	border: 1px solid #e47f18;
-	background-color: #ff8e1b;
-}
-
-#user_name{
-	color: rgb(52, 39, 39);
-	font-weight: bold;
-	cursor: pointer;
-}
 
 h1 { 
 	font-size: 120%; 
@@ -154,6 +356,10 @@ h2 {
 	display: block;
 }
 
+#custom img{
+	max-width: 440px;
+}
+
 .img-thm {
 	width: 180px;
 	height: 180px;
@@ -169,6 +375,16 @@ h2 {
 
 /* ======================================================================== */
 
+#id_st #data{
+	line-height: 20px;
+	padding-left: 5px;
+}
+
+#id_ab p{
+	line-height: 20px;
+	padding-left: 10px;
+}
+
 #logo{
 	float: left;
 	padding: 10px;
@@ -182,11 +398,11 @@ h2 {
 	padding-bottom: 4px;	
 	display: block;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-	max-width: 400px;
+	max-width: 450px;
 }
 
 #title small{
@@ -206,31 +422,16 @@ h2 {
 }
 
 .new_true{
-	background: #F1F1F1;
+	background: #F1F1F1 !important;
 }
 
-#thread{
-	cursor: Pointer;
-	display: block;
-	width: 535px;
-	height: 75px;
-	margin-top: 0px;	
-	padding-bottom: 3px;	
-	border-bottom: 1px dashed #CCCCCC;
+.blink {
+    background: rgba(255, 0, 0, 0.14);
 }
 
-#thread:hover{
-	background: #F1F1F1;
-}
-
-
-#project{
-	display: block;
-	width: 535px;
-	height: 75px;
-	margin-top: 0px;	
-	padding-bottom: 3px;	
-	border-bottom: 1px dashed #CCCCCC;
+span.uprice {
+	color: blue;
+	float: right;
 }
 
 #msglogo{
@@ -242,13 +443,28 @@ h2 {
 
 #msgbody{
 	margin: 5px;
-	width: 465px;
+	width: 430px;
 	display: inline-block;
+	word-wrap: break-word;
+}
+
+#msgbody p{
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
+}
+
+blockquote {
+	margin-left: 10px;
+	border-left: 2px Solid green;
+	padding: 5px;
+	padding-left: 10px;
+	background: #F8F4F4;
 }
 
 #msg{
 	display: block;
-	width: 535px;
+	width: 525px;
 	height: auto;
 	min-height: 60px;	
 	border-bottom: 1px dashed #CCCCCC;
@@ -258,8 +474,29 @@ h2 {
 	background: #F1F1F1;
 }
 
-#project:hover{
-	background: #F1F1F1;
+#mstitle{
+	padding-top: 10px;
+	padding-bottom: 4px;	
+	display: block;
+	font-weight: bold;
+	font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	max-width: 400px;
+}
+
+#msdesc{
+	font-family: calibri;
+	display: block;
+	/* font-weight: bold;  */
+	font-size: 13px;
+	min-height: 15px;
+	max-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	margin-bottom: 4px;
+	cursor: pointer;
 }
 
 #desc{
@@ -321,6 +558,7 @@ h2 {
 
 #container
 {
+	height: 100%;
 	width: 100%;
 	background-color: #fff;
 	vertical-align: top;
@@ -331,6 +569,7 @@ h2 {
 	background-color: #fff;
 	vertical-align: top;
 	overflow: auto;
+	overflow-x: hidden;
 }
 
 #d5{
@@ -440,4 +679,48 @@ h2 {
 	border: 0;
 	text-align: center;
 	width: 81px;
+}
+
+.feed-thumbnail {
+	max-width: 100px;
+}
+
+/*  ======================================== CHAT ===================================== */
+
+#logo img, #msglogo img{
+	border-radius: 6px;
+	/* border: 2px Solid white; */
+}
+
+.chat {
+	position: relative;
+	background-color: #E8E8E8;
+	min-height: 26px;
+	color: Black;
+	border-radius: 10px;
+	font-family: monospace;
+	padding: 10px;
+	font-size: 12px;
+	line-height: 21px;
+}
+.chat:after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+}
+ 
+.chat-right:after {
+	border-left-color: #E8E8E8;
+	left: 100%;
+	top: 50%;
+	margin-top: -15px;
+}
+  
+.chat-left:after {
+	border-right-color: #E8E8E8;
+	top: 50%;
+	right: 100%;
+	margin-top: -15px;
 }

@@ -1,21 +1,28 @@
 /*
-	FH_COM_JS v2.0.0 alpha
-	(c) 2014 by Vaskevych. All rights reserved.
+	FH_COM_JS v3.0 alpha
+	(c) 2014-2015 by Vaskevych. All rights reserved.
 	http://freelancehunt.com/freelancer/Vaskevych.html
 */
 
-/*
-	FH_COM_JS v2.0.0 alpha
-	(c) 2014 by Vaskevych. All rights reserved.
-	http://freelancehunt.com/freelancer/Vaskevych.html
-*/
-
-var api_prj  = "https://api.freelancehunt.com/projects";
-	api_feed = "https://api.freelancehunt.com/my/feed";
-	api_mess = "https://api.freelancehunt.com/threads";
-	api_prof = "https://api.freelancehunt.com/profiles/me";
+var api_prj  = "https://api.freelancehunt.com/projects",
+	api_feed = "https://api.freelancehunt.com/my/feed",
+	api_mess = "https://api.freelancehunt.com/threads",
+	api_prof = "https://api.freelancehunt.com/profiles/me",
+	api_skil = "https://api.freelancehunt.com/skills";
 	
 $(document).ready(function() {
+	
+function GetSkillsUrl(){
+	if (localStorage.getItem('ME_SKL') == null) {
+		return api_prj;
+	} else {
+		if ( localStorage.getItem('ME_SKL').length == 0) {
+			return api_prj;
+		} else {
+			return api_prj + '?skills=' + localStorage.getItem('ME_SKL').slice(0, -1);
+		}
+	}
+}
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
 
@@ -27,9 +34,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
 	
 	if(message.method == "Update"){
 	
+		$.GetData(api_skil, 'SKL');
 		$.GetData(api_feed, 'FEED');
 		$.GetData(api_prof, 'PROFILE');
-		$.GetDataVal(api_prj, 'DB');
+		$.GetDataVal(GetSkillsUrl(), 'DB');
 		$.GetData(api_mess, 'MS');
 		
 		$.UpdateCount();
@@ -43,6 +51,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
 	}
 	
 });
+
+// 10 minutes interval
+setInterval(function() { 
+	chrome.runtime.sendMessage({method:"Update"}, null);
+}, 600000);
 
 // First Run App
 chrome.runtime.sendMessage({method:"Update"}, null);

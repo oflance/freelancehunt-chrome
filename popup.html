@@ -2,46 +2,66 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>FH.Monitor 2.0</title>
+	<title>FH.Monitor 3.0</title>
 	<link rel="stylesheet" type="text/css" href="styles/body.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="styles/visualize.jQuery.css" media="all" />
 
 	<script language="javascript" type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/base.sha256.js"></script>
 	<script language="javascript" type="text/javascript" src="js/app.core.js"></script>	
 	<script language="javascript" type="text/javascript" src="js/j.timeago.js"></script>
 	<script language="javascript" type="text/javascript" src="js/popup.js"></script>
+	<script language="javascript" type="text/javascript" src="js/visualize.jQuery.js"></script>
 </head>
 
 <body>
 
-<div id="loading"><img src="images/loading.gif" /></div>
-<div id="eloading"><div><img src="images/error.png" />
-<br>Компьютер не подключен к Интернету</div></div>
+<div id="loading">
+	<img src="images/loading.gif" />
+</div>
+
+<div id="eloading">
+	<div><img src="images/error.png" />
+	<br>Компьютер не подключен к Интернету</div>
+</div>
 
 <table border="0" cellpadding="0" cellspacing="1" id="content">
 <tr>
 	<td id="tab-container" rowspan="2">
 		<ul id="menu">
-			<li for="d1" class="selected icon-database"></li>
-			<li for="d2" class="icon-book"></li>
-			<li for="d3" class="icon-menu"></li>
-			<li for="d4" class="icon-cog"></li>
-			<li for="d5" class="icon-qq"></li>
+			<li for="id_fd" class="selected icon-feed"></li>
+			<li for="id_pj" class="icon-proj"></li>
+			<li for="id_ms" class="icon-mail"><span id="umnew2">0</span></li>
+			<li for="id_st" class="icon-cog"></li>
+			<li for="id_ab" class="icon-qq"></li>
 		</ul>	
 	</td>
 	<td id="container">
-		<div id="main-container">
-			<div id="d1">
-				<div id="feed"></div>
+		
+		<div id="id_fd" class="idiv show"><div id="data"></div></div>
+		<div id="id_pj" class="idiv hide"><div id="data"></div></div>
+		<div id="id_ms" class="idiv hide"><div id="data"></div></div>
+		<div id="id_us" class="idiv hide"><div id="data"></div></div>
+		<div id="id_fl" class="idiv hide"><div id="data"></div></div>
+		
+		<div id="id_fk" class="idiv hide"><div id="data">
+			<table id="graph"><thead></thead><tbody></tbody></table>
+		</div></div>
+		
+		<div id="id_ms_thr" class="idiv hide">
+			<div id="data">			
+				<div id="msg_feed"></div>
+				<div id="msg_new"> 
+					<textarea id="msg_text"></textarea>
+					<div id="msg_send" class="icon-right-open" alt="CTRL+ENTER"></div>
+					<div id="thread_id" style="display: none;"></div>
+				</div>
 			</div>
-			<div id="d2">
-				<div id="projects"></div>
-			</div>
-			<div id="d3">
-				<div id="ms"></div>
-			</div>
-			<div id="d4">
-				<div id="settings">
+		</div>	
+	
+		<div id="id_st" class="idiv hide">
+			<div id="data">
+			
 					<h1>
 					  <img src="images/icon_48.png" style="float: left; padding-right: 5px;">
 					  <div id="title">Нотификатор Freelancehunt.com</div>
@@ -63,42 +83,45 @@
 						<br>
 						<label class="descript">Секретный ключ доступа к Аpi сайта</label>    
 					</div>
-					<div class="item ">	
-						<label>Получить ключи:</label><br>
-						<p><a href="http://freelancehunt.com/my/api"><b>Сгенерировать ключи на сайте.</b></a></p> 
-					</div>
 					<div class="button" id="saveitems">Сохранить</div>
+					<div class="item">
+						<p><b>Нет ключа?</b>&nbsp;<a href="http://freelancehunt.com/my/api"><b>Сгенерировать на сайте.</b></a></p> 
+					</div>
 					</form>	
-				</div>
+	
 			</div>
-			<div id="d5">	
-				<span id="about">
-					<h1>
-					  <img src="images/about.png" style="float: left; padding-right: 5px;"/>
-					  <div id="title">Нотификатор Freelancehunt.com</div>
-					  <div id="title"><small>Автор: Васкевич Максим</small></div>
-					</h1>
-					<p><i>Написан на чистом энтузиазме для собственного использования.</i><br><br>
-					<b>Donate:</b><br>
-					Но если кому то понравился можете отблагодорить (WebMoney):<br>
-					<b>Z303192222179</b><br>
-					<b>U337429717656</b><br>
-					<b>R311995955905</b><br><br>
-					Предложения и замечания отправляйте в сообщения на <a href="http://freelancehunt.com/freelancer/Vaskevych.html"><b>freelancehunt.com</b></a></p>
-					<p><i>Все права на иконки и загружаемый контент пренадлежат исключительно <b>freelancehunt.com</b></i></p>
-				</span>
+		</div>	
+	
+		<div id="id_ab" class="idiv hide">
+			<div id="data">
+			
+				<h1><img src="images/about.png" style="float: left; padding-right: 5px;"/>
+				  <div id="title">Нотификатор Freelancehunt.com</div>
+				  <div id="title"><small>Автор: Васкевич Максим</small></div>
+				</h1>
+				
+				<p><i>Написан на чистом энтузиазме для собственного использования.</i><br><br>
+				<b>Donate:</b><br>
+				Но если кому то понравился можете отблагодорить (WebMoney):<br>
+				<b>Z303192222179</b><br>
+				<b>U337429717656</b><br>
+				<b>R311995955905</b><br><br>
+				Предложения и замечания отправляйте в сообщения на <a href="http://freelancehunt.com/freelancer/Vaskevych.html"><b>freelancehunt.com</b></a></p>
+				<p><i>Все права на иконки и загружаемый контент пренадлежат исключительно <b>freelancehunt.com</b></i></p>
+			
 			</div>
-			<div id="d6">
-				<div id="custom"></div>
-			</div>
-		</div>
+		</div>	
+			
 	</td>
 </tr>
+
 <tr>
 	<td id="user">
 		<span id="refresh" class="icon-arrows-cw">&nbsp;Обновить</span>
-		<span id="user_name" for="https://api.freelancehunt.com/profiles/me">Нет информации...</span>
-		<span id="flicks" class="icon-signal">0</span>
+		<span id="filter"  for="#id_fl" class="icon-signal">&nbsp;Фильтр</span>
+		<span id="me_off"  class="icon-bell-off">&nbsp;Занят</span>
+		<span id="u_name"  for="https://api.freelancehunt.com/profiles/me">Нет информации...</span>
+		<span id="flicks"  for="#id_fk" class="icon-signal">0</span>
 	</td>
 </tr>
 

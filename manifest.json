@@ -1,9 +1,9 @@
 {
-  "name": "FreelanceHunt.com - monitor",
-  "short_name": "FreelanceHunt Extension",
-  "description": "Отображает информацию о новых проектах и заданиях.",
-  "author": "Max Vaskevych",
-  "version": "1.0",
+  "name": "Freelancehunt.com - monitor",
+  "short_name": "Freelancehunt Extension",
+  "description": "Отображает информацию о новых проектах и заданиях. Просмотр рейтингов и сообщений, быстрая переписка.",
+  "author": "Maxim Vaskevych",
+  "version": "3.0",
   "permissions": [
     "tabs",
 	"storage"
@@ -12,11 +12,11 @@
     "page": "bg.html"
   },
    "icons": {
-      "16": "images/icon.png",
+      "19": "images/icon.png",
       "48": "images/icon_48.png"
    },
   "browser_action": {
-      "default_title": "Нотификатор сайта FreelanceHunt.com",
+      "default_title": "Нотификатор сайта Freelancehunt.com",
       "default_icon":  "images/icon.png",
       "default_popup": "popup.html"
   },
